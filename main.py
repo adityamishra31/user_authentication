@@ -38,9 +38,27 @@ def signup():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
-
-
+    if request.method == 'POST':
+        email = request.form['Email']
+        password = request.form['password']
+        user = User.query.filter_by(email=username, password=password).first()
+        if user is not None:
+            session['logged_in'] = True
+            session['username'] = username
+            return redirect("/")
+        else:
+            return render_template('login.html', error='Invalid username or password')
+    else:
+        return render_template('login.html')
+ 
+    
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    return redirect('/')
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 
 
